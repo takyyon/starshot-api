@@ -1,0 +1,16 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.fs = void 0;
+exports.fs = {
+    "/app": {
+        "package.json": `{
+      "dependencies": {
+        "riot": "*"
+      },
+      "devDependencies": {
+        "@riotjs/compiler": "*"
+      }
+    }`,
+    },
+};
+//# sourceMappingURL=riot.js.map

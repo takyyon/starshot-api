@@ -1,0 +1,1 @@
+{"version":3,"file":"monorepo.js","sourceRoot":"","sources":["../../src/__fixtures__/monorepo.ts"],"names":[],"mappings":";;;AAAa,QAAA,EAAE,GAAG;IAChB,MAAM,EAAE;QACN,cAAc,EAAE,IAAI;QACpB,OAAO,EAAE;YACP,cAAc,EAAE;;;;QAId;SACH;QACD,GAAG,EAAE;YACH,cAAc,EAAE;;;;QAId;SACH;QACD,OAAO,EAAE;YACP,cAAc,EAAE;;;;QAId;YACF,eAAe,EAAE;;;;QAIf;YACF,cAAc,EAAE;;;;;;;;;;;;QAYd;SACH;KACF;CACF,CAAC"}

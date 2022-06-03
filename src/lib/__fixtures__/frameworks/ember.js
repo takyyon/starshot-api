@@ -1,0 +1,6 @@
+export var fs = {
+    "/app": {
+        "package.json": "{\n      \"devDependencies\": {\n        \"@ember/optional-features\": \"*\",\n        \"@glimmer/component\": \"*\",\n        \"@glimmer/tracking\": \"*\",\n        \"babel-eslint\": \"*\",\n        \"broccoli-asset-rev\": \"*\",\n        \"ember-auto-import\": \"*\",\n        \"ember-cli\": \"*\",\n        \"ember-cli-app-version\": \"*\",\n        \"ember-cli-babel\": \"*\",\n        \"ember-cli-dependency-checker\": \"*\",\n        \"ember-cli-htmlbars\": \"*\",\n        \"ember-cli-inject-live-reload\": \"*\",\n        \"ember-cli-sri\": \"*\",\n        \"ember-cli-uglify\": \"*\",\n        \"ember-export-application-global\": \"*\",\n        \"ember-fetch\": \"*\",\n        \"ember-load-initializers\": \"*\",\n        \"ember-maybe-import-regenerator\": \"*\",\n        \"ember-resolver\": \"*\",\n        \"ember-source\": \"*\",\n        \"ember-template-lint\": \"*\"\n      },\n      \"ember\": {\n        \"edition\": \"octane\"\n      }\n    }",
+        ".ember.cli": "{\n      /**\n        Ember CLI sends analytics information by default. The data is completely\n        anonymous, but there are times when you might want to disable this behavior.\n\n        Setting disableAnalytics to true will prevent any data from being sent.\n      */\n      \"disableAnalytics\": false\n    }"
+    }
+};

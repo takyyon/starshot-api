@@ -1,0 +1,9 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.fs = void 0;
+exports.fs = {
+    "/app": {
+        "index.html": ``,
+    },
+};
+//# sourceMappingURL=static.js.map

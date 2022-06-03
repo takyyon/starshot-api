@@ -1,0 +1,141 @@
+[
+    {
+        "id": "nodejs",
+        "name": "Node.js",
+        "outputLocation": "api",
+        "configFiles": ["package.json"]
+    },
+    {
+        "id": "dotnet",
+        "name": ".NET",
+        "outputLocation": "api",
+        "configFiles": ["*.csproj", "*.fsproj", "global.json"]
+    },
+    {
+        "id": "python",
+        "name": "Python",
+        "outputLocation": "api",
+        "variant": ["django"],
+        "configFiles": ["requirements.txt", "pyproject.toml", "runtime.txt", "setup.py"]
+    },
+    {
+        "id": "django",
+        "name": "Django",
+        "outputLocation": "api",
+        "configFiles": ["manage.py", "wsgi.py", "app.py"]
+    },
+    {
+        "id": "static",
+        "name": "Static",
+        "outputLocation": "./",
+        "configFiles": ["index.html", "Index.html", "default.htm", "default.html", "index.htm"]
+    },
+    {
+        "id": "angular",
+        "name": "Angular",
+        "variant": ["angular-universal", "scully", "ionic-angular"],
+        "package": { "dependencies": ["@angular/core"] },
+        "outputLocation": "{angular.json#values(projects)[0].architect.build.options.outputPath}",
+        "configFiles": ["angular.json"]
+    },
+    {
+        "id": "angular-universal",
+        "name": "Angular Universal",
+        "package": { "dependencies": ["@angular/platform-server"] },
+        "outputLocation": "{angular.json#values(projects)[0].architect.build.options.outputPath}",
+        "configFiles": ["angular.json", "tsconfig.server.json"]
+    },
+    {
+        "id": "ionic-angular",
+        "name": "Ionic for Angular",
+        "package": { "dependencies": ["@ionic/angular"] },
+        "outputLocation": "{angular.json#values(projects)[0].architect.build.options.outputPath}",
+        "configFiles": ["ionic.config.json", "angular.json"]
+    },
+    {
+        "id": "scully",
+        "name": "Scully",
+        "package": { "dependencies": ["@scullyio/scully", "@scullyio/init"] },
+        "outputLocation": "{angular.json#values(projects)[0].architect.build.options.outputPath}",
+        "configFiles": ["angular.json", "scully.*.config.ts"]
+    },
+    {
+        "id": "react",
+        "name": "React",
+        "variant": ["preact", "nextjs", "gatsby", "ionic-react"],
+        "package": { "dependencies": ["react", "react-dom"] },
+        "outputLocation": "build"
+    },
+    { "id": "preact", "name": "Preact", "package": { "dependencies": ["preact"] }, "outputLocation": "build" },
+    { "id": "nextjs", "name": "Next.js", "package": { "dependencies": ["next"] }, "outputLocation": "out" },
+    { "id": "gatsby", "name": "Gatsby", "package": { "dependencies": ["gatsby"] }, "outputLocation": "public", "configFiles": ["gatsby-config.js"] },
+    { "id": "ionic-react", "name": "Ionic for React", "package": { "dependencies": ["@ionic/react"] }, "outputLocation": "build" },
+    {
+        "id": "vue",
+        "name": "Vue.js",
+        "variant": ["nuxtjs", "vuepress"],
+        "package": { "dependencies": ["vue"] },
+        "outputLocation": "dist",
+        "configFiles": ["vue.config.js"]
+    },
+    { "id": "nuxtjs", "name": "Nuxt.js", "package": { "dependencies": ["nuxt"] }, "outputLocation": "dist", "configFiles": ["nuxt.config.js"] },
+    { "id": "vuepress", "name": "VuePress", "package": { "dependencies": ["vuepress"] }, "outputLocation": "dist" },
+    { "id": "aurelia", "name": "Aurelia", "package": { "dependencies": ["aurelia-bootstrapper"] }, "outputLocation": "dist" },
+    { "id": "elm", "name": "Elm", "package": { "dependencies": ["elm", "elm-lang"] }, "outputLocation": "public", "configFiles": ["elm.json"] },
+    {
+        "id": "ember",
+        "name": "Ember.js",
+        "package": { "entryKey": "ember", "dependencies": ["ember-cli"] },
+        "outputLocation": "dist",
+        "configFiles": ["ember-cli-build.js", ".ember-cli"]
+    },
+    {
+        "id": "flutter",
+        "name": "Flutter",
+        "package": { "dependencies": ["flutter", "flutter_test"] },
+        "outputLocation": "build/web",
+        "configFiles": ["pubspec.yaml"]
+    },
+    { "id": "glimmer", "name": "Glimmer.js", "package": { "dependencies": ["@glimmer/core"] }, "outputLocation": "dist" },
+    {
+        "id": "hugo",
+        "name": "Hugo",
+        "package": { "dependencies": ["hugo-cli"] },
+        "outputLocation": "public",
+        "configFiles": ["archetypes", "config.toml"]
+    },
+    { "id": "knockoutjs", "name": "Knockout.js", "package": { "dependencies": ["knockout"] }, "outputLocation": "dist" },
+    {
+        "id": "lit",
+        "name": "Lit",
+        "package": { "dependencies": ["lit-element"] },
+        "outputLocation": "dist",
+        "configFiles": ["custom-elements.json"]
+    },
+    { "id": "marko", "name": "Marko.js", "package": { "dependencies": ["marko"] }, "outputLocation": "public" },
+    { "id": "meteor", "name": "Meteor", "package": { "entryKey": "meteor", "dependencies": ["meteor-node-stubs"] }, "outputLocation": "bundle" },
+    { "id": "mithril", "name": "Mithril.js", "package": { "dependencies": ["mithril"] }, "outputLocation": "dist" },
+    {
+        "id": "polymer",
+        "name": "Polymer",
+        "package": { "dependencies": ["@polymer/polymer"] },
+        "outputLocation": "build/default",
+        "configFiles": ["polymer.json"]
+    },
+    { "id": "riot", "name": "RiotJS", "package": { "dependencies": ["riot"] }, "outputLocation": "dist" },
+    {
+        "id": "stencil",
+        "name": "Stencil.js",
+        "package": { "dependencies": ["@stencil/core"] },
+        "outputLocation": "www",
+        "configFiles": ["stencil.config.ts"]
+    },
+    { "id": "svelte", "name": "Svelte", "package": { "dependencies": ["svelte"] }, "outputLocation": "public" },
+    {
+        "id": "typescript",
+        "name": "TypeScript",
+        "package": { "dependencies": ["typescript"] },
+        "outputLocation": "{tsconfig.json#compilerOptions.outDir}",
+        "configFiles": ["tsconfig.json"]
+    }
+]

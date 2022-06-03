@@ -1,0 +1,17 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.fs = void 0;
+exports.fs = {
+    "/app": {
+        "server": {
+            "main.js": ``
+        },
+        "client": {
+            "main.js": ``
+        },
+        "package.json": `{
+      "meteor": {}
+    }`,
+    },
+};
+//# sourceMappingURL=meteor.js.map
