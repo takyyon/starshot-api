@@ -13,13 +13,13 @@ app.get('/', async (req: Request, res: Response) => {
 
   if(!org || typeof org !== 'string') {
     res.status(400);
-    res.json('Invalid or missing parameters: Org');
+    res.json('Invalid parameters: Org');
   } else if(!repo || typeof repo !== 'string') {
     res.status(400);
-    res.json('Invalid or missing parameters: Repo');
+    res.json('Invalid parameters: Repo');
   } else if(typeof branch !== 'string'){
     res.status(400);
-    res.json('Invalid or missing parameters: Branch');
+    res.json('Invalid parameters: Branch');
   } else if(typeof token !== 'string'){
     res.status(400);
     res.json('Invalid header: Github-token');
