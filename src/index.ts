@@ -1,6 +1,6 @@
 import { Express, Request, Response } from 'express';
 const express = require("express");
-import {  getFrameworks } from './lib/functions';
+import {  getFrameworks, getRecommendation } from './lib/functions';
 
 const app: Express = express();
 const port = process.env.PORT || 3000;
@@ -25,8 +25,12 @@ app.get('/', async (req: Request, res: Response) => {
     res.json('Invalid header: Github-token');
   } else {
     const frameworks = await getFrameworks(org, repo, branch, token);
+    const recommendation = await getRecommendation(frameworks, org, repo, branch, token);
     res.status(200);
-    res.json(frameworks);
+    res.json({
+      frameworks: frameworks,
+      recommendation: recommendation
+    });
   }
 });
 
