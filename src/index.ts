@@ -3,7 +3,7 @@ const express = require("express");
 import {  getFrameworks, getRecommendation } from './lib/functions';
 
 const app: Express = express();
-const port = process.env.PORT || 1337;
+const port = process.env.PORT || 8080;
 
 app.get('/', async (req: Request, res: Response) => {
   const repo = req.query.repo;
