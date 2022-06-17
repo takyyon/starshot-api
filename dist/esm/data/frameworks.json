@@ -140,6 +140,13 @@
       "package": { "dependencies": ["typescript"] },
       "outputLocation": "{tsconfig.json#compilerOptions.outDir}",
       "configFiles": ["tsconfig.json"]
+    },
+    {
+      "id": "azure-functions",
+      "name": "Azure Functions",
+      "package": { "dependencies": [] },
+      "outputLocation": "",
+      "configFiles": ["host.json"]
     }
   ]
   
