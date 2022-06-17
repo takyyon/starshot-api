@@ -8,7 +8,7 @@ const port = process.env.PORT || 3000;
 app.get('/', async (req: Request, res: Response) => {
   const repo = req.query.repo;
   const org = req.query.org;
-  const branch = req.query.branch;
+  let branch = req.query.branch;
   const token = req.headers['github-token'];
 
   if(!org || typeof org !== 'string') {
@@ -17,31 +17,43 @@ app.get('/', async (req: Request, res: Response) => {
   } else if(!repo || typeof repo !== 'string') {
     res.status(400);
     res.json('Invalid or missing parameters: Repo');
-  } else if(typeof branch !== 'string'){
-    res.status(400);
-    res.json('Invalid or missing parameters: Branch');
-  } else if(typeof token !== 'string'){
-    res.status(400);
-    res.json('Invalid header: Github-token');
   } else {
-    // process.env.GITHUB_TOKEN = token;
-    let frameworks: FrameworkMatch[] = [];
-    let recommendation = 'webapp';
-    try{
-      frameworks = await getFrameworks(org, repo, branch, token);
-      recommendation = await getRecommendation(frameworks, org, repo, branch, token);
-    }catch(ex) {
-      console.log(ex);
+    
+    if(!!token && typeof token === 'string') {
+      process.env.GITHUB_TOKEN = token;
+    } else {
+      console.warn('Invalid token header');
     }
 
-    res.status(200);
-    res.json({
-      frameworks,
-      recommendation
-    });
+    if(typeof branch !== 'string') {
+      branch = '';
+      console.warn('Invalid branch parameter');
+    }
+
+    runAndReturnAnalysis(res, org, repo, branch);
   }
 });
 
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at https://localhost:${port}`);
 });
+
+const runAndReturnAnalysis = (res: Response, org: string, repo: string, branch?: string) => {
+  return getFrameworks(org, repo, branch).then(frameworks => {
+    getRecommendation(frameworks, org, repo, branch).then(recommendation => {
+      res.status(200);
+      res.json({
+        frameworks,
+        recommendation
+      });
+    }).catch(ex1 => {
+      console.log('Error on Recommendation: ' + ex1);
+      res.status(500);
+      res.json(ex1);
+    }).catch(ex2 => {
+      console.log('Error on framework: ' + ex2);
+      res.status(500);
+      res.json(ex2);
+    });
+  });
+};

@@ -4,19 +4,16 @@ const getProjectUrl = (org: string, repo: string, branch?: string) => {
     return `https://github.com/${org}/${repo}${branch ? `#${branch}`: ''}`;
 };
 
-export const getFrameworks = (org: string, repo: string, branch?: string, githubToken?: string): Promise<FrameworkMatch[]> => {
-    console.log(`Token: ${githubToken}`);
+export const getFrameworks = (org: string, repo: string, branch?: string): Promise<FrameworkMatch[]> => {
     const projectUrl = getProjectUrl(org, repo, branch);
-    
-    return inspect(projectUrl, [], true);
+    return inspect(projectUrl, [], true, []);
 };
 
-export const getRecommendation = (frameworks: FrameworkMatch[], org: string, repo: string, branch?: string, githubToken?: string): Promise<RecommendationType> => {
-    console.log(`Token: ${githubToken}`);
+export const getRecommendation = (frameworks: FrameworkMatch[], org: string, repo: string, branch?: string): Promise<RecommendationType> => {
     const projectUrl = getProjectUrl(org, repo, branch);
     console.log(`Url: ${projectUrl}`);
 
     console.log(frameworks);
 
-    return Promise.resolve('webapp');
+    return Promise.resolve('staticwebapp');
 };

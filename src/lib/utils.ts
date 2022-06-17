@@ -78,7 +78,7 @@ export function updateGitHubProjectBlobEntryInCache(file: GitHubBlobResponse) {
 }
 
 export function getRepoInfoFromUrl(projectUrl: string): { repo: string; owner: string } {
-  const [_a, _b, _c, repo, owner] = projectUrl.split("/");
+  const [_a, _b, _c, owner, repo] = projectUrl.split("/");
   return { repo, owner };
 }
 
