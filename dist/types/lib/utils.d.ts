@@ -1,4 +1,5 @@
 import type { Dirent } from "fs";
+import { AxiosResponse } from 'axios';
 /**
  * Loads a list of files from a dictionary or a GitHub tree.
  * @param root The root directory to load from (or a GitHub project URL).
@@ -10,7 +11,7 @@ export declare function loadProjectFiles(root: string): Promise<string[]>;
 export declare function getApplocationUrl(filepath: string): string;
 export declare function getUrlFromFilepath(filepath: string): string;
 export declare function normalizeUrl(url: string, defaultBranch?: string): string;
-export declare function callGitHubApi<T>(url: string, isRecursive?: boolean): Promise<[Response, T]>;
+export declare function callGitHubApi<T>(url: string, isRecursive?: boolean): Promise<[AxiosResponse, T]>;
 export declare function getGithubProjectDataFromCache(): GitHubTreeResponse;
 export declare function setGithubDataInCache(data: GitHubTreeResponse): void;
 export declare function updateGitHubProjectBlobEntryInCache(file: GitHubBlobResponse): void;
@@ -55,7 +56,81 @@ export declare function fileExists(filePath: string): boolean;
  * ```
  */
 export declare function traverseFolder(folder: string): AsyncGenerator<string>;
-export declare function loadFrameworksDefinitions(): FrameworkDefinition[];
+export declare function loadFrameworksDefinitions(): ({
+    id: string;
+    name: string;
+    outputLocation: string;
+    configFiles: string[];
+    variant?: undefined;
+    package?: undefined;
+} | {
+    id: string;
+    name: string;
+    outputLocation: string;
+    variant: string[];
+    configFiles: string[];
+    package?: undefined;
+} | {
+    id: string;
+    name: string;
+    variant: string[];
+    package: {
+        dependencies: string[];
+        entryKey?: undefined;
+    };
+    outputLocation: string;
+    configFiles: string[];
+} | {
+    id: string;
+    name: string;
+    package: {
+        dependencies: string[];
+        entryKey?: undefined;
+    };
+    outputLocation: string;
+    configFiles: string[];
+    variant?: undefined;
+} | {
+    id: string;
+    name: string;
+    variant: string[];
+    package: {
+        dependencies: string[];
+        entryKey?: undefined;
+    };
+    outputLocation: string;
+    configFiles?: undefined;
+} | {
+    id: string;
+    name: string;
+    package: {
+        dependencies: string[];
+        entryKey?: undefined;
+    };
+    outputLocation: string;
+    configFiles?: undefined;
+    variant?: undefined;
+} | {
+    id: string;
+    name: string;
+    package: {
+        entryKey: string;
+        dependencies: string[];
+    };
+    outputLocation: string;
+    configFiles: string[];
+    variant?: undefined;
+} | {
+    id: string;
+    name: string;
+    package: {
+        entryKey: string;
+        dependencies: string[];
+    };
+    outputLocation: string;
+    configFiles?: undefined;
+    variant?: undefined;
+})[];
 export declare function isValidJson(jsonContent: string | null): boolean;
 export declare function safeParseJson(jsonContent: string): {
     [key: string]: any;

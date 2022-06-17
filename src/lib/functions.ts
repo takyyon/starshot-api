@@ -1,15 +1,22 @@
 import { inspect } from "./detectors";
 
+const getProjectUrl = (org: string, repo: string, branch?: string) => {
+    return `https://github.com/${org}/${repo}${branch ? `#${branch}`: ''}`;
+};
+
 export const getFrameworks = (org: string, repo: string, branch?: string, githubToken?: string): Promise<FrameworkMatch[]> => {
-    console.log(githubToken);
-    const projectUrl = `https://github.com/${org}/${repo}${`${branch}? : #${branch}: ''`}`;
+    console.log(`Token: ${githubToken}`);
+    const projectUrl = getProjectUrl(org, repo, branch);
+    
     return inspect(projectUrl, [], true);
 };
 
 export const getRecommendation = (frameworks: FrameworkMatch[], org: string, repo: string, branch?: string, githubToken?: string): Promise<RecommendationType> => {
-    console.log(githubToken);
-    const projectUrl = `https://github.com/${org}/${repo}${`${branch}? : #${branch}: ''`}`;
-    console.log(projectUrl);
+    console.log(`Token: ${githubToken}`);
+    const projectUrl = getProjectUrl(org, repo, branch);
+    console.log(`Url: ${projectUrl}`);
+
     console.log(frameworks);
+
     return Promise.resolve('webapp');
 };

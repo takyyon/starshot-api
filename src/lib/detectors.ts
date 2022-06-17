@@ -35,7 +35,11 @@ export async function inspect(
   const toIgnoreIfMultipleFrameworksFound: string[] = ["nodejs", "typescript" /* other frameworks with variants will be added later (see below) */];
 
   if (framewokDefinitions.length === 0) {
-    framewokDefinitions = loadFrameworksDefinitions();
+    const json = JSON.parse(JSON.stringify(loadFrameworksDefinitions()));
+    if('default' in json) {
+      // tslint:disable-next-line:no-string-literal
+      framewokDefinitions = json['default'];
+    }
   }
 
   if (projectFiles.length === 0) {
@@ -52,7 +56,7 @@ export async function inspect(
     // - a simple folder
     console.warn(`No package.json file found at the root of the project.`);
   }
-
+  
   for (const framework of framewokDefinitions) {
     for (const fileUrl of projectFiles) {
       const frameworkMatchByPackageJson = await inspectByPackageJSONIfExists(framework, projectRootUrl, fileUrl);

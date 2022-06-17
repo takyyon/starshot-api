@@ -1,8 +1,9 @@
 import type { Dirent } from "fs";
 import stripJsonComments from "strip-json-comments";
 const { search } = require("jmespath");
-import * as FRAMEWORK_DEFINTIONS from "../data/frameworks.json";
-
+const axios  = require('axios').default;
+import { AxiosResponse} from 'axios';
+import * as FRAMEWORK_DEFINTIIONS from '../data/frameworks.json';
 /**
  * Loads a list of files from a dictionary or a GitHub tree.
  * @param root The root directory to load from (or a GitHub project URL).
@@ -15,34 +16,10 @@ export async function loadProjectFiles(root: string) {
 }
 
 export function getApplocationUrl(filepath: string) {
-  filepath = getUrlFromFilepath(filepath);
-
-  if (filepath.startsWith("http")) {
-    const project = getGithubProjectDataFromCache();
-    if (project) {
-      const { branch, url } = project.$$repo;
-      return path.dirname(filepath.replace(url, "").replace(`/blob/${branch}/`, "/"));
-    }
-
-    return filepath;
-  }
-
-  return path.dirname(filepath);
+  return getUrlFromFilepath(filepath);
 }
 
 export function getUrlFromFilepath(filepath: string) {
-  if (filepath.startsWith("http")) {
-    const project = getGithubProjectDataFromCache();
-    if (project) {
-      // find the file in the project
-      const file = project.tree.find((f) => f.url === filepath);
-      if (file) {
-        // https://github.com/owner/repo/blob/<branch>/<filepath>
-        const { url, branch } = project.$$repo;
-        return `${url}/blob/${branch}/${file.path}`;
-      }
-    }
-  }
 
   return filepath;
 }
@@ -51,24 +28,17 @@ export function normalizeUrl(url: string, defaultBranch = "main"): string {
   const [repoUrl, branch = "main"] = url.split("#");
 
   let normalizedUrl = repoUrl;
-  if (url.startsWith("https://github.com")) {
+  if (repoUrl.startsWith("https://github.com")) {
     // convert HTTP URL to API URL
     // from: https://github.com/owner/repo#branch
     // to: https://api.github.com/repos/owner/repo/git/trees/branch
-    normalizedUrl = url.replace("https://github.com", "https://api.github.com/repos") + `/git/trees/${branch || defaultBranch}`;
-  } else {
-    // convert relative URL to absolute blob URL (from cache)
-    // from: package.json
-    // to: https://api.github.com/repos/owner/repo/git/blobs/sha
-    const project = getGithubProjectDataFromCache();
-    const blobUrl = project?.tree?.find((entry) => entry.path === url)?.url;
-    normalizedUrl = blobUrl ?? url;
+    normalizedUrl = repoUrl.replace("https://github.com", "https://api.github.com/repos") + `/git/trees/${branch || defaultBranch}`;
   }
 
   return normalizedUrl;
 }
 
-export async function callGitHubApi<T>(url: string, isRecursive = true): Promise<[Response, T]> {
+export async function callGitHubApi<T>(url: string, isRecursive = true): Promise<[AxiosResponse, T]> {
   if (url.startsWith("https://api.github.com") === false) {
     throw new Error(`Invalid GitHub URL: ${url || "null"}`);
   }
@@ -76,7 +46,7 @@ export async function callGitHubApi<T>(url: string, isRecursive = true): Promise
   const options = {
     headers: {
       Accept: "application/vnd.github.v3+json",
-      Authorization: "Basic " + window.btoa("manekinekko:GITHUB_TOKEN"),
+      Authorization: "Basic " + Buffer.from(process.env.GITHUB_TOKEN || 'takyyon:GITHUB_TOKEN', 'base64').toString('base64'),
     },
   };
 
@@ -84,16 +54,16 @@ export async function callGitHubApi<T>(url: string, isRecursive = true): Promise
     url = `${url}?recursive=${isRecursive}`;
   }
 
-  const response = await fetch(url, options);
+  const response = await axios({ headers: options.headers, url });
 
-  return [response, (await response.json()) as T];
+  return [response, (await response.data) as T];
 }
 export function getGithubProjectDataFromCache(): GitHubTreeResponse {
-  return (window as any).__GITHUB_PROJECT__;
+  return (process.env as any).__GITHUB_PROJECT__;
 }
 
 export function setGithubDataInCache(data: GitHubTreeResponse) {
-  (window as any).__GITHUB_PROJECT__ = data;
+  (process.env as any).__GITHUB_PROJECT__ = data;
 }
 
 export function updateGitHubProjectBlobEntryInCache(file: GitHubBlobResponse) {
@@ -180,7 +150,7 @@ export const fs = {
         entry.content = entry.content.replace(/\n/g, "\r\n");
 
         // cache the decoded content
-        entry.$$content = window.atob(entry.content);
+        entry.$$content = Buffer.from(entry.content, 'base64').toString('binary');
 
         updateGitHubProjectBlobEntryInCache(entry);
 
@@ -265,8 +235,8 @@ export async function* traverseFolder(folder: string): AsyncGenerator<string> {
   }
 }
 
-export function loadFrameworksDefinitions(): FrameworkDefinition[] {
-  return FRAMEWORK_DEFINTIONS as FrameworkDefinition[];
+export function loadFrameworksDefinitions() {
+  return FRAMEWORK_DEFINTIIONS;
 }
 
 export function isValidJson(jsonContent: string | null): boolean {

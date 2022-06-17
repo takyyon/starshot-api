@@ -24,12 +24,20 @@ app.get('/', async (req: Request, res: Response) => {
     res.status(400);
     res.json('Invalid header: Github-token');
   } else {
-    const frameworks = await getFrameworks(org, repo, branch, token);
-    const recommendation = await getRecommendation(frameworks, org, repo, branch, token);
+    // process.env.GITHUB_TOKEN = token;
+    let frameworks: FrameworkMatch[] = [];
+    let recommendation = 'webapp';
+    try{
+      frameworks = await getFrameworks(org, repo, branch, token);
+      recommendation = await getRecommendation(frameworks, org, repo, branch, token);
+    }catch(ex) {
+      console.log(ex);
+    }
+
     res.status(200);
     res.json({
-      frameworks: frameworks,
-      recommendation: recommendation
+      frameworks,
+      recommendation
     });
   }
 });

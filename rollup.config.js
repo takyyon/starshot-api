@@ -54,6 +54,12 @@ function jsonPlugin() {
   });
 }
 
+function nodePlugin() {
+  return nodeResolve({
+    browser: true
+  });
+}
+
 export default [
   // CJS
   {
@@ -70,10 +76,10 @@ export default [
       sourcemap: "inline",
     },
     plugins: [
-      jsonPlugin(),
       typescriptPlugin(),
       commonjs(),
-      nodeResolve(),
+      jsonPlugin(),
+      nodePlugin(),
       copyPlugin("cjs"),
     ],
   },
@@ -99,8 +105,8 @@ export default [
         babelHelpers: "bundled",
         exclude: "node_modules/**",
       }),
-      nodeResolve(),
       jsonPlugin(),
+      nodePlugin(),
       terserPlugin(),
       copyPlugin("esm"),
     ],

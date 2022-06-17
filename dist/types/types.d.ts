@@ -53,3 +53,5 @@ declare interface GitHubBlobResponse {
   $$content?: string;
   encoding: "base64";
 }
+
+declare type RecommendationType = 'stackwebapp' | 'webapp';

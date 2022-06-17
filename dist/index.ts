@@ -1,6 +1,6 @@
 import { Express, Request, Response } from 'express';
 const express = require("express");
-import {  getFrameworks } from './lib/functions';
+import {  getFrameworks, getRecommendation } from './lib/functions';
 
 const app: Express = express();
 const port = process.env.PORT || 3000;
@@ -13,20 +13,32 @@ app.get('/', async (req: Request, res: Response) => {
 
   if(!org || typeof org !== 'string') {
     res.status(400);
-    res.json('Invalid parameters: Org');
+    res.json('Invalid or missing parameters: Org');
   } else if(!repo || typeof repo !== 'string') {
     res.status(400);
-    res.json('Invalid parameters: Repo');
+    res.json('Invalid or missing parameters: Repo');
   } else if(typeof branch !== 'string'){
     res.status(400);
-    res.json('Invalid parameters: Branch');
+    res.json('Invalid or missing parameters: Branch');
   } else if(typeof token !== 'string'){
     res.status(400);
     res.json('Invalid header: Github-token');
   } else {
-    const frameworks = await getFrameworks(org, repo, branch, token);
+    // process.env.GITHUB_TOKEN = token;
+    let frameworks: FrameworkMatch[] = [];
+    let recommendation = 'webapp';
+    try{
+      frameworks = await getFrameworks(org, repo, branch, token);
+      recommendation = await getRecommendation(frameworks, org, repo, branch, token);
+    }catch(ex) {
+      console.log(ex);
+    }
+
     res.status(200);
-    res.json(frameworks);
+    res.json({
+      frameworks,
+      recommendation
+    });
   }
 });
 
