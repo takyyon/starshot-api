@@ -19,7 +19,7 @@
   },
   "engines": {
     "node": ">=14",
-    "npm": ">=7"
+    "npm": ">=6"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
