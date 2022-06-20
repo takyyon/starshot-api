@@ -91,7 +91,6 @@ export default [
     //   include: './src/**',
     //   clearScreen: false
     // },
-    context: "window",
     output: {
       // dir: "./dist",
       // entryFileNames: "esm/index.js",
