@@ -28,7 +28,7 @@ jobs:
           npm run test --if-present
       
       - name: Zip artifact for deployment
-        run: zip starshot-release.zip ./* -r
+        run: 7z a starshot-release.zip ./*
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
@@ -50,8 +50,8 @@ jobs:
           name: node-app
 
       - name: unzip artifact for deployment
-        run: unzip starshot-release.zip
-        
+        run: 7z e starshot-release.zip
+
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
