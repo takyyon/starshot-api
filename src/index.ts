@@ -10,6 +10,7 @@ app.get('/', async (req: Request, res: Response) => {
   const org = req.query.org;
   let branch = req.query.branch;
   const token = req.headers['github-token'];
+  process.env.GITHUB_TOKEN = '';
 
   if(!org || typeof org !== 'string') {
     res.status(400);
@@ -30,7 +31,12 @@ app.get('/', async (req: Request, res: Response) => {
       console.warn('Invalid branch parameter');
     }
 
-    runAndReturnAnalysis(res, org, repo, branch);
+    try{
+      await runAndReturnAnalysis(res, org, repo, branch);
+    } catch(ex) {
+      res.status(500);
+      res.json(ex);
+    }
   }
 });
 
