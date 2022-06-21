@@ -1,4 +1,4 @@
-import { inspect } from "./detectors";
+import { recommendService, inspect } from "./detectors";
 
 const getProjectUrl = (org: string, repo: string, branch?: string) => {
     return `https://github.com/${org}/${repo}${branch ? `#${branch}`: ''}`;
@@ -11,9 +11,6 @@ export const getFrameworks = (org: string, repo: string, branch?: string): Promi
 
 export const getRecommendation = (frameworks: FrameworkMatch[], org: string, repo: string, branch?: string): Promise<RecommendationType> => {
     const projectUrl = getProjectUrl(org, repo, branch);
-    console.log(`Url: ${projectUrl}`);
 
-    console.log(frameworks);
-
-    return Promise.resolve('staticwebapp');
+    return Promise.resolve(recommendService(frameworks, projectUrl));
 };

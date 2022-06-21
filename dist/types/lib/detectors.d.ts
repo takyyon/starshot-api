@@ -1,3 +1,4 @@
+export declare function recommendService(frameworks: FrameworkMatch[], projectUrl: string): RecommendationType;
 /**
  * Inspect which framework is being used in a project, based on common npm dependencies (and devDependencies) listed in package.json.
  * Note: A list of known npm dependencies (and devDependencies) must be provided in the framework dictionary, in the `package.dependencies` property!

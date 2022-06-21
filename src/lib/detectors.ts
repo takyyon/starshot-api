@@ -15,6 +15,54 @@ import {
 
 const PACKAGE_JSON_FILENAME = "package.json";
 
+enum FrameworkIds {
+  static='static',
+  nodejs='nodejs',
+  dotnet='dotnet',
+  python='python',
+  django='django',
+  angular='angular',
+  angularUniversal='angular-universal',
+  ionicAngular='ionic-angular',
+  scully='scully',
+  react='react',
+  preact='preact',
+  vue='vue',
+  nuxtjs='nuxtjs',
+  vuepress='vuepress',
+  aurelia='aurelia',
+  elm='elm',
+  ember='ember',
+  flutter='flutter',
+  hugo='hugo',
+  knockoutjs='knockoutjs',
+  lit='lit',
+  marko='marko',
+  meteor='meteor',
+  mithril='mithril',
+  polymer='polymer',
+  riot='riot',
+  stencil='stencil',
+  svelte='svelte',
+  typescript='typescript',
+  azureFunctions='azure-functions'
+};
+
+export function recommendService (frameworks: FrameworkMatch[], projectUrl: string): RecommendationType {
+  let recommendation: RecommendationType = 'webapp';
+  const frameworkObj: Record<string, FrameworkMatch> = {};
+
+  for(const match of frameworks) {
+    frameworkObj[match.framework.id] = match;
+  }
+
+  if(isSWAService(frameworkObj, projectUrl)) {
+    recommendation = 'staticwebapp';
+  }
+
+  return recommendation;
+}
+
 /**
  * Inspect which framework is being used in a project, based on common npm dependencies (and devDependencies) listed in package.json.
  * Note: A list of known npm dependencies (and devDependencies) must be provided in the framework dictionary, in the `package.dependencies` property!
@@ -343,4 +391,46 @@ async function getMatchedFrameworkObject(projectRootUrl: string, framework: Fram
     matchedFiles: [fileUrl],
     framework,
   };
+}
+
+function isSWAService(frameworks: Record<string, FrameworkMatch>, projectUrl: string) {
+  console.log(`Url: ${projectUrl}`);
+  const totalFrameworks = Object.keys(frameworks).length;
+  
+  // For SWA, the repo should have some static content
+  if(frameworks[FrameworkIds.static]) {
+    // Static Code only
+    if(totalFrameworks === 1) {
+      return true;
+    }
+
+    // Static Code with Azure Functions
+    if(totalFrameworks === 2 && frameworks[FrameworkIds.azureFunctions]) {
+      return true;
+    }
+    
+    // Static Code with JavaScript
+    if(frameworks[FrameworkIds.nodejs]) {
+      const frameworksWithoutDependencies = Object.keys(frameworks).filter(key => !frameworks[key].framework.package?.dependencies);
+      // Static code with JS and Azure Functions
+      if(frameworks[FrameworkIds.azureFunctions]) {
+        
+        // Only host.json file
+        if(totalFrameworks === 3) {
+          return true;
+        }
+
+        // Azure functions has some code in a different language
+        if(totalFrameworks === 4 && frameworksWithoutDependencies.length === 4) {
+          return true
+        }
+      
+        // Static code + JS only
+      } else if(frameworksWithoutDependencies.length === 2) {
+        return true;
+      }
+    }
+  }
+
+  return false;
 }
