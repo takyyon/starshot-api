@@ -14,10 +14,14 @@ app.get('/', async (req: Request, res: Response) => {
 
   if(!org || typeof org !== 'string') {
     res.status(400);
-    res.json('Invalid or missing parameters: Org');
+    res.json({
+      message: 'Invalid or missing parameters: Org'
+    });
   } else if(!repo || typeof repo !== 'string') {
     res.status(400);
-    res.json('Invalid or missing parameters: Repo');
+    res.json({
+      message: 'Invalid or missing parameters: Repo'
+    });
   } else {
     
     if(!!token && typeof token === 'string') {
@@ -35,7 +39,7 @@ app.get('/', async (req: Request, res: Response) => {
       await runAndReturnAnalysis(res, org, repo, branch);
     } catch(ex) {
       res.status(500);
-      res.json(ex);
+      res.json(JSON.parse(JSON.stringify(ex)));
     }
   }
 });

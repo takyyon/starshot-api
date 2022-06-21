@@ -97,7 +97,7 @@ export async function fetchGitHubProjectTrees(projectUrl: string): Promise<strin
 
   // there is a case where the API returns a 404 if the main branch is not available
   // let's try one more time using legacy master branch
-  if (response.status === 404) {
+  if (response.status !== 200) {
     [response, json] = await callGitHubApi<GitHubTreeResponse>(repoUrl.replace(`/${branch}`, "/master"));
   }
 

@@ -431,6 +431,6 @@ function isSWAService(frameworks: Record<string, FrameworkMatch>, projectUrl: st
       }
     }
   }
-
+  
   return false;
 }
