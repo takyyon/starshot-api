@@ -54,7 +54,7 @@ const runAndReturnAnalysis = (res: Response, org: string, repo: string, branch?:
     getRecommendation(frameworks, org, repo, branch).then(recommendation => {
       res.status(200);
       res.json({
-        frameworks: frameworks.map(f => f.framework),
+        frameworks,
         recommendation
       });
     }).catch(ex1 => {

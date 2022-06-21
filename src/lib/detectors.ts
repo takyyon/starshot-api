@@ -430,7 +430,9 @@ function isSWAService(frameworks: Record<string, FrameworkMatch>, projectUrl: st
         }
       
         // Static code + JS only
-      } else if(frameworksWithoutDependencies.length === 2) {
+      } else if(frameworksWithoutDependencies.length > 2) {
+        return false;
+      } else {
         return true;
       }
     }
