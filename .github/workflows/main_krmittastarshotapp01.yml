@@ -49,9 +49,6 @@ jobs:
         with:
           name: node-app
 
-      - name: unzip artifact for deployment
-        run: 7z x starshot-release.7z
-
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
@@ -59,4 +56,4 @@ jobs:
           app-name: 'krmittastarshotapp01'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_795CF1246DFB4CE1B05987353B036936 }}
-          package: .
+          package: starshot-release.7z
