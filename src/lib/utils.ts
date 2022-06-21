@@ -2,7 +2,7 @@ import type { Dirent } from "fs";
 import stripJsonComments from "strip-json-comments";
 const { search } = require("jmespath");
 const axios  = require('axios').default;
-import { AxiosResponse} from 'axios';
+import { AxiosError, AxiosResponse} from 'axios';
 import * as FRAMEWORK_DEFINTIIONS from '../data/frameworks.json';
 /**
  * Loads a list of files from a dictionary or a GitHub tree.
@@ -16,10 +16,34 @@ export async function loadProjectFiles(root: string) {
 }
 
 export function getApplocationUrl(filepath: string) {
-  return getUrlFromFilepath(filepath);
+  filepath = getUrlFromFilepath(filepath);
+
+  if (filepath.startsWith("http")) {
+    const project = getGithubProjectDataFromCache();
+    if (project) {
+      const { branch, url } = project.$$repo;
+      return path.dirname(filepath.replace(url, "").replace(`/blob/${branch}/`, "/"));
+    }
+
+    return filepath;
+  }
+
+  return path.dirname(filepath);
 }
 
 export function getUrlFromFilepath(filepath: string) {
+  if (filepath.startsWith("http")) {
+    const project = getGithubProjectDataFromCache();
+    if (project) {
+      // find the file in the project
+      const file = project.tree.find((f) => f.url === filepath);
+      if (file) {
+        // https://github.com/owner/repo/blob/<branch>/<filepath>
+        const { url, branch } = project.$$repo;
+        return `${url}/blob/${branch}/${file.path}`;
+      }
+    }
+  }
 
   return filepath;
 }
@@ -33,6 +57,13 @@ export function normalizeUrl(url: string, defaultBranch = "main"): string {
     // from: https://github.com/owner/repo#branch
     // to: https://api.github.com/repos/owner/repo/git/trees/branch
     normalizedUrl = repoUrl.replace("https://github.com", "https://api.github.com/repos") + `/git/trees/${branch || defaultBranch}`;
+  } else {
+    // convert relative URL to absolute blob URL (from cache)
+    // from: package.json
+    // to: https://api.github.com/repos/owner/repo/git/blobs/sha
+    const project = getGithubProjectDataFromCache();
+    const blobUrl = project?.tree?.find((entry) => entry.path === url)?.url;
+    normalizedUrl = blobUrl ?? url;
   }
 
   return normalizedUrl;
@@ -56,8 +87,17 @@ export async function callGitHubApi<T>(url: string, isRecursive = true): Promise
     url = `${url}?recursive=${isRecursive}`;
   }
 
-  const response = await axios({ headers: options.headers, url });
 
+  const response: AxiosResponse = await axios({ headers: options.headers, url }).then((axiosResponse: AxiosResponse) => {
+    return axiosResponse;
+  }).catch((error: AxiosError) => {
+    if (error.response) {
+      return error.response;
+    } else {
+      throw error.message;
+    }
+  });
+  
   return [response, (await response.data) as T];
 }
 export function getGithubProjectDataFromCache(): GitHubTreeResponse {
@@ -91,15 +131,16 @@ export function getRepoInfoFromUrl(projectUrl: string): { repo: string; owner: s
  * @returns An array of files URLs
  */
 export async function fetchGitHubProjectTrees(projectUrl: string): Promise<string[]> {
-  const repoUrl = normalizeUrl(projectUrl);
   const [url, branch = "main"] = projectUrl.split("#");
+
+  const repoUrl = normalizeUrl(url, branch);
 
   // try fist with the provided branch, or use the default one (main)
   let [response, json] = await callGitHubApi<GitHubTreeResponse>(repoUrl);
 
   // there is a case where the API returns a 404 if the main branch is not available
   // let's try one more time using legacy master branch
-  if (response.status !== 200) {
+  if (response.status === 404) {
     [response, json] = await callGitHubApi<GitHubTreeResponse>(repoUrl.replace(`/${branch}`, "/master"));
   }
 

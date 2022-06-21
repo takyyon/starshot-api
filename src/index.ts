@@ -11,6 +11,7 @@ app.get('/', async (req: Request, res: Response) => {
   let branch = req.query.branch;
   const token = req.headers['github-token'];
   process.env.GITHUB_TOKEN = '';
+  process.env.__GITHUB_PROJECT__ = '';
 
   if(!org || typeof org !== 'string') {
     res.status(400);
