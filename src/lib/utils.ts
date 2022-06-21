@@ -43,10 +43,12 @@ export async function callGitHubApi<T>(url: string, isRecursive = true): Promise
     throw new Error(`Invalid GitHub URL: ${url || "null"}`);
   }
 
+  const token = process.env.GITHUB_TOKEN;
+
   const options = {
     headers: {
       Accept: "application/vnd.github.v3+json",
-      Authorization: "Basic " + Buffer.from(process.env.GITHUB_TOKEN || 'takyyon:GITHUB_TOKEN', 'base64').toString('base64'),
+      Authorization: !!token ? `token ${token}` : `Basic ${Buffer.from('takyyon:GITHUB_TOKEN', 'base64').toString('base64')}`,
     },
   };
 
