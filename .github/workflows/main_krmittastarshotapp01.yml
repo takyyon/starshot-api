@@ -28,13 +28,13 @@ jobs:
           npm run test --if-present
       
       - name: Zip artifact for deployment
-        run: 7z a -t7z -mx=9 starshot-release.7z ./*
+        run: 7z a starshot-release.zip ./*
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: node-app
-          path: starshot-release.7z
+          path: starshot-release.zip
 
   deploy:
     runs-on: ubuntu-latest
@@ -56,4 +56,4 @@ jobs:
           app-name: 'krmittastarshotapp01'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_795CF1246DFB4CE1B05987353B036936 }}
-          package: starshot-release.7z
+          package: starshot-release.zip
