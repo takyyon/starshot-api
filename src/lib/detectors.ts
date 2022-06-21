@@ -106,7 +106,9 @@ export async function inspect(
   }
   
   for (const framework of framewokDefinitions) {
+    
     for (const fileUrl of projectFiles) {
+      
       const frameworkMatchByPackageJson = await inspectByPackageJSONIfExists(framework, projectRootUrl, fileUrl);
       if (frameworkMatchByPackageJson) {
         foundFrameworks = insertOrUpdateMatchedFramwork(await getMatchedFrameworkObject(projectRootUrl, framework, fileUrl), foundFrameworks);
@@ -421,8 +423,10 @@ function isSWAService(frameworks: Record<string, FrameworkMatch>, projectUrl: st
         }
 
         // Azure functions has some code in a different language
-        if(totalFrameworks === 4 && frameworksWithoutDependencies.length === 4) {
-          return true
+        if(totalFrameworks === 4 && frameworksWithoutDependencies.length > 4) {
+          return false;
+        } else {
+          return true;
         }
       
         // Static code + JS only

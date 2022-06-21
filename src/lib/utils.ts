@@ -101,11 +101,11 @@ export async function callGitHubApi<T>(url: string, isRecursive = true): Promise
   return [response, (await response.data) as T];
 }
 export function getGithubProjectDataFromCache(): GitHubTreeResponse {
-  return (process.env as any).__GITHUB_PROJECT__;
+  return !!process.env.__GITHUB_PROJECT__ ? JSON.parse(process.env.__GITHUB_PROJECT__): undefined;
 }
 
 export function setGithubDataInCache(data: GitHubTreeResponse) {
-  (process.env as any).__GITHUB_PROJECT__ = data;
+  process.env.__GITHUB_PROJECT__ = JSON.stringify(data);
 }
 
 export function updateGitHubProjectBlobEntryInCache(file: GitHubBlobResponse) {
