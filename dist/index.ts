@@ -1,9 +1,14 @@
 import { Express, Request, Response } from 'express';
 const express = require("express");
+const cors = require('cors');
 import {  getFrameworks, getRecommendation } from './lib/functions';
 
 const app: Express = express();
 const port = process.env.PORT || 8080;
+
+app.use(cors({
+  origin: ['*.portal.azure.com', '*.portal.azure.net']
+}));
 
 app.get('/', async (req: Request, res: Response) => {
   const repo = req.query.repo;
