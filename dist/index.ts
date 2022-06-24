@@ -6,15 +6,9 @@ import {  getFrameworks, getRecommendation } from './lib/functions';
 const app: Express = express();
 const port = process.env.PORT || 8080;
 
-const whitelist = ['portal.azure.com', 'portal.azure.net', 'localhost:8080']
 const corsOptions = {
-  origin: (origin: string, callback: any) => {
-    if (!origin || whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error())
-    }
-  }
+  origin: ['*'],
+  method: ['GET']
 };
 
 app.use(cors(corsOptions));
