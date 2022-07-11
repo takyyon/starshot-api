@@ -8,7 +8,7 @@ const port = process.env.PORT || 8080;
 
 const corsOptions = {
   origin: ['*'],
-  method: ['GET']
+  method: ['GET', 'OPTIONS']
 };
 
 app.use(cors(corsOptions));
