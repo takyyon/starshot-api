@@ -138,10 +138,10 @@ export async function fetchGitHubProjectTrees(projectUrl: string): Promise<strin
   // try fist with the provided branch, or use the default one (main)
   let [response, json] = await callGitHubApi<GitHubTreeResponse>(repoUrl);
 
-  // there is a case where the API returns a 404 if the main branch is not available
-  // let's try one more time using legacy master branch
-  if (response.status === 404) {
-    [response, json] = await callGitHubApi<GitHubTreeResponse>(repoUrl.replace(`/${branch}`, "/master"));
+  // there is a case where the API returns a 404 if the branch is master,
+  // since github transitioned from master to main and there are some regressions for certain repos
+  if (response.status === 404 && branch === "master") {
+    [response, json] = await callGitHubApi<GitHubTreeResponse>(repoUrl.replace(`/${branch}`, "/main"));
   }
 
   if (json) {
