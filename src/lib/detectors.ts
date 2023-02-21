@@ -45,7 +45,8 @@ enum FrameworkIds {
   stencil='stencil',
   svelte='svelte',
   typescript='typescript',
-  azureFunctions='azure-functions'
+  azureFunctions='azure-functions',
+  dockerFile='docker-file'
 };
 
 export function recommendService (frameworks: FrameworkMatch[], projectUrl: string): RecommendationType {
@@ -58,6 +59,8 @@ export function recommendService (frameworks: FrameworkMatch[], projectUrl: stri
 
   if(isSWAService(frameworkObj, projectUrl)) {
     recommendation = 'staticwebapp';
+  } else if(isContainerAppService(frameworkObj)) {
+    recommendation = 'containerapp';
   }
 
   return recommendation;
@@ -104,9 +107,7 @@ export async function inspect(
     // - a simple folder
     console.warn(`No package.json file found at the root of the project.`);
   }
-  
   for (const framework of framewokDefinitions) {
-    
     for (const fileUrl of projectFiles) {
       
       const frameworkMatchByPackageJson = await inspectByPackageJSONIfExists(framework, projectRootUrl, fileUrl);
@@ -439,4 +440,8 @@ function isSWAService(frameworks: Record<string, FrameworkMatch>, projectUrl: st
   }
   
   return false;
+}
+
+function isContainerAppService(frameworks: Record<string, FrameworkMatch>) {
+  return !!frameworks[FrameworkIds.dockerFile];
 }
