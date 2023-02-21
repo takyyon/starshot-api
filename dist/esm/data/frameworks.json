@@ -31,12 +31,6 @@
       "configFiles": ["index.html", "Index.html", "default.htm", "default.html", "index.htm"]
     },
     {
-      "id": "docker-file",
-      "name": "Dockerfile",
-      "outputLocation": "./",
-      "configFiles": ["Dockerfile", "docker-compose.yml", "docker-compose-dev.yml", "docker-compose.images.yml", "docker-stack.yml"]
-    },
-    {
       "id": "angular",
       "name": "Angular",
       "variant": ["angular-universal", "scully", "ionic-angular"],

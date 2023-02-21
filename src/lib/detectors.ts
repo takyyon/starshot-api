@@ -59,7 +59,7 @@ export function recommendService (frameworks: FrameworkMatch[], projectUrl: stri
 
   if(isSWAService(frameworkObj, projectUrl)) {
     recommendation = 'staticwebapp';
-  } else if(isContainerAppService(frameworkObj, projectUrl)) {
+  } else if(isContainerAppService(frameworkObj)) {
     recommendation = 'containerapp';
   }
 
@@ -442,8 +442,6 @@ function isSWAService(frameworks: Record<string, FrameworkMatch>, projectUrl: st
   return false;
 }
 
-function isContainerAppService(frameworks: Record<string, FrameworkMatch>, projectUrl: string) {
-  console.log(`Url: ${projectUrl}`);
-
+function isContainerAppService(frameworks: Record<string, FrameworkMatch>) {
   return !!frameworks[FrameworkIds.dockerFile];
 }
