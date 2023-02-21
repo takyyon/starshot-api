@@ -46,7 +46,7 @@ enum FrameworkIds {
   svelte='svelte',
   typescript='typescript',
   azureFunctions='azure-functions',
-  dockerFile='dockerFile'
+  dockerFile='docker-file'
 };
 
 export function recommendService (frameworks: FrameworkMatch[], projectUrl: string): RecommendationType {
@@ -108,7 +108,6 @@ export async function inspect(
     console.warn(`No package.json file found at the root of the project.`);
   }
   for (const framework of framewokDefinitions) {
-    console.log(projectFiles);
     for (const fileUrl of projectFiles) {
       
       const frameworkMatchByPackageJson = await inspectByPackageJSONIfExists(framework, projectRootUrl, fileUrl);
@@ -444,5 +443,7 @@ function isSWAService(frameworks: Record<string, FrameworkMatch>, projectUrl: st
 }
 
 function isContainerAppService(frameworks: Record<string, FrameworkMatch>, projectUrl: string) {
-  return true;
+  console.log(`Url: ${projectUrl}`);
+
+  return !!frameworks[FrameworkIds.dockerFile];
 }

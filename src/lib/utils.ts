@@ -132,8 +132,6 @@ export function getRepoInfoFromUrl(projectUrl: string): { repo: string; owner: s
  */
 export async function fetchGitHubProjectTrees(projectUrl: string): Promise<string[]> {
   const [url, branch = "main"] = projectUrl.split("#");
-  console.log(url);
-  console.log(branch)
   const repoUrl = normalizeUrl(projectUrl, branch);
 
   // try fist with the provided branch, or use the default one (main)
