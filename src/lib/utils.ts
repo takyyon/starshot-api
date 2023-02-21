@@ -1,8 +1,8 @@
 import type { Dirent } from "fs";
 import stripJsonComments from "strip-json-comments";
 const { search } = require("jmespath");
-const axios  = require('axios').default;
-import { AxiosError, AxiosResponse} from 'axios';
+const axios = require('axios').default;
+import { AxiosError, AxiosResponse } from 'axios';
 import * as FRAMEWORK_DEFINTIIONS from '../data/frameworks.json';
 /**
  * Loads a list of files from a dictionary or a GitHub tree.
@@ -97,11 +97,11 @@ export async function callGitHubApi<T>(url: string, isRecursive = true): Promise
       throw error.message;
     }
   });
-  
+
   return [response, (await response.data) as T];
 }
 export function getGithubProjectDataFromCache(): GitHubTreeResponse {
-  return !!process.env.__GITHUB_PROJECT__ ? JSON.parse(process.env.__GITHUB_PROJECT__): undefined;
+  return !!process.env.__GITHUB_PROJECT__ ? JSON.parse(process.env.__GITHUB_PROJECT__) : undefined;
 }
 
 export function setGithubDataInCache(data: GitHubTreeResponse) {
@@ -132,12 +132,12 @@ export function getRepoInfoFromUrl(projectUrl: string): { repo: string; owner: s
  */
 export async function fetchGitHubProjectTrees(projectUrl: string): Promise<string[]> {
   const [url, branch = "main"] = projectUrl.split("#");
-
+  console.log(url);
+  console.log(branch)
   const repoUrl = normalizeUrl(projectUrl, branch);
 
   // try fist with the provided branch, or use the default one (main)
   let [response, json] = await callGitHubApi<GitHubTreeResponse>(repoUrl);
-
   // there is a case where the API returns a 404 if the branch is master,
   // since github transitioned from master to main and there are some regressions for certain repos
   if (response.status === 404 && branch === "master") {
@@ -174,33 +174,33 @@ export const fs = {
     return [];
   },
   async readFileSync(url: string): Promise<string | null> {
-      if (url.includes("/git/trees/")) {
-        return null;
-      }
-      const project = getGithubProjectDataFromCache();
-      const file = project?.tree?.find((entry) => entry.url.endsWith(url));
-
-      if (file?.$$blob?.$$content) {
-        return file.$$blob?.$$content as string;
-      }
-
-      // file content is not in cache, fetch it from GitHub
-      const [_, entry] = await callGitHubApi<GitHubBlobResponse>(url);
-
-      if (entry?.content) {
-        // NOTE: sometimes the base64 content contains multiple "\n" !!!
-        // we need to remove them, otherwise decoding will fail
-        entry.content = entry.content.replace(/\n/g, "\r\n");
-
-        // cache the decoded content
-        entry.$$content = Buffer.from(entry.content, 'base64').toString('binary');
-
-        updateGitHubProjectBlobEntryInCache(entry);
-
-        return entry.$$content;
-      }
-
+    if (url.includes("/git/trees/")) {
       return null;
+    }
+    const project = getGithubProjectDataFromCache();
+    const file = project?.tree?.find((entry) => entry.url.endsWith(url));
+
+    if (file?.$$blob?.$$content) {
+      return file.$$blob?.$$content as string;
+    }
+
+    // file content is not in cache, fetch it from GitHub
+    const [_, entry] = await callGitHubApi<GitHubBlobResponse>(url);
+
+    if (entry?.content) {
+      // NOTE: sometimes the base64 content contains multiple "\n" !!!
+      // we need to remove them, otherwise decoding will fail
+      entry.content = entry.content.replace(/\n/g, "\r\n");
+
+      // cache the decoded content
+      entry.$$content = Buffer.from(entry.content, 'base64').toString('binary');
+
+      updateGitHubProjectBlobEntryInCache(entry);
+
+      return entry.$$content;
+    }
+
+    return null;
   },
   existsSync(path: string): boolean {
     const data = getGithubProjectDataFromCache();
