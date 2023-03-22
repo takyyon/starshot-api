@@ -46,7 +46,8 @@ enum FrameworkIds {
   svelte='svelte',
   typescript='typescript',
   azureFunctions='azure-functions',
-  dockerFile='docker-file'
+  dockerFile='docker-file',
+  azureAzd='azure-azd'
 };
 
 export function recommendService (frameworks: FrameworkMatch[], projectUrl: string): RecommendationType {
@@ -61,6 +62,8 @@ export function recommendService (frameworks: FrameworkMatch[], projectUrl: stri
     recommendation = 'staticwebapp';
   } else if(isContainerAppService(frameworkObj)) {
     recommendation = 'containerapp';
+  } else if(isAzdTemplate(frameworkObj)) {
+    return 'azd-template';
   }
 
   return recommendation;
@@ -444,4 +447,8 @@ function isSWAService(frameworks: Record<string, FrameworkMatch>, projectUrl: st
 
 function isContainerAppService(frameworks: Record<string, FrameworkMatch>) {
   return !!frameworks[FrameworkIds.dockerFile];
+}
+
+function isAzdTemplate(frameworks: Record<string, FrameworkMatch>) {
+  return !!frameworks[FrameworkIds.azureAzd];
 }
