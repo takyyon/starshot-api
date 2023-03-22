@@ -58,12 +58,12 @@ export function recommendService (frameworks: FrameworkMatch[], projectUrl: stri
     frameworkObj[match.framework.id] = match;
   }
 
-  if(isSWAService(frameworkObj, projectUrl)) {
+  if(isAzdTemplate(frameworkObj)) {
+    return 'azd-template';
+  } else if(isSWAService(frameworkObj, projectUrl)) {
     recommendation = 'staticwebapp';
   } else if(isContainerAppService(frameworkObj)) {
     recommendation = 'containerapp';
-  } else if(isAzdTemplate(frameworkObj)) {
-    return 'azd-template';
   }
 
   return recommendation;
