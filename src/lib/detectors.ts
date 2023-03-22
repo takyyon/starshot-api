@@ -16,57 +16,59 @@ import {
 const PACKAGE_JSON_FILENAME = "package.json";
 
 enum FrameworkIds {
-  static='static',
-  nodejs='nodejs',
-  dotnet='dotnet',
-  python='python',
-  django='django',
-  angular='angular',
-  angularUniversal='angular-universal',
-  ionicAngular='ionic-angular',
-  scully='scully',
-  react='react',
-  preact='preact',
-  vue='vue',
-  nuxtjs='nuxtjs',
-  vuepress='vuepress',
-  aurelia='aurelia',
-  elm='elm',
-  ember='ember',
-  flutter='flutter',
-  hugo='hugo',
-  knockoutjs='knockoutjs',
-  lit='lit',
-  marko='marko',
-  meteor='meteor',
-  mithril='mithril',
-  polymer='polymer',
-  riot='riot',
-  stencil='stencil',
-  svelte='svelte',
-  typescript='typescript',
-  azureFunctions='azure-functions',
-  dockerFile='docker-file',
-  azureAzd='azure-azd'
-};
+  static = "static",
+  nodejs = "nodejs",
+  dotnet = "dotnet",
+  python = "python",
+  django = "django",
+  angular = "angular",
+  angularUniversal = "angular-universal",
+  ionicAngular = "ionic-angular",
+  scully = "scully",
+  react = "react",
+  preact = "preact",
+  vue = "vue",
+  nuxtjs = "nuxtjs",
+  vuepress = "vuepress",
+  aurelia = "aurelia",
+  elm = "elm",
+  ember = "ember",
+  flutter = "flutter",
+  hugo = "hugo",
+  knockoutjs = "knockoutjs",
+  lit = "lit",
+  marko = "marko",
+  meteor = "meteor",
+  mithril = "mithril",
+  polymer = "polymer",
+  riot = "riot",
+  stencil = "stencil",
+  svelte = "svelte",
+  typescript = "typescript",
+  azureFunctions = "azure-functions",
+  dockerFile = "docker-file",
+  azureAzd = "azure-azd",
+}
 
-export function recommendService (frameworks: FrameworkMatch[], projectUrl: string): RecommendationType {
-  let recommendation: RecommendationType = 'webapp';
+export function recommendService(
+  frameworks: FrameworkMatch[],
+  projectUrl: string
+): RecommendationType {
   const frameworkObj: Record<string, FrameworkMatch> = {};
 
-  for(const match of frameworks) {
+  for (const match of frameworks) {
     frameworkObj[match.framework.id] = match;
   }
 
-  if(isAzdTemplate(frameworkObj)) {
-    return 'azd-template';
-  } else if(isSWAService(frameworkObj, projectUrl)) {
-    recommendation = 'staticwebapp';
-  } else if(isContainerAppService(frameworkObj)) {
-    recommendation = 'containerapp';
+  if (isAzdTemplate(frameworkObj)) {
+    return "azd-template";
+  } else if (isSWAService(frameworkObj, projectUrl)) {
+    return "staticwebapp";
+  } else if (isContainerAppService(frameworkObj)) {
+    return "containerapp";
   }
 
-  return recommendation;
+  return "webapp";
 }
 
 /**
@@ -86,13 +88,16 @@ export async function inspect(
   projectFiles: string[] = []
 ): Promise<FrameworkMatch[]> {
   let foundFrameworks: FrameworkMatch[] = [];
-  const toIgnoreIfMultipleFrameworksFound: string[] = ["nodejs", "typescript" /* other frameworks with variants will be added later (see below) */];
+  const toIgnoreIfMultipleFrameworksFound: string[] = [
+    "nodejs",
+    "typescript" /* other frameworks with variants will be added later (see below) */,
+  ];
 
   if (framewokDefinitions.length === 0) {
     const json = JSON.parse(JSON.stringify(loadFrameworksDefinitions()));
-    if('default' in json) {
+    if ("default" in json) {
       // tslint:disable-next-line:no-string-literal
-      framewokDefinitions = json['default'];
+      framewokDefinitions = json["default"];
     }
   }
 
@@ -112,39 +117,75 @@ export async function inspect(
   }
   for (const framework of framewokDefinitions) {
     for (const fileUrl of projectFiles) {
-      
-      const frameworkMatchByPackageJson = await inspectByPackageJSONIfExists(framework, projectRootUrl, fileUrl);
+      const frameworkMatchByPackageJson = await inspectByPackageJSONIfExists(
+        framework,
+        projectRootUrl,
+        fileUrl
+      );
       if (frameworkMatchByPackageJson) {
-        foundFrameworks = insertOrUpdateMatchedFramwork(await getMatchedFrameworkObject(projectRootUrl, framework, fileUrl), foundFrameworks);
+        foundFrameworks = insertOrUpdateMatchedFramwork(
+          await getMatchedFrameworkObject(projectRootUrl, framework, fileUrl),
+          foundFrameworks
+        );
       }
 
-      const frameworkMatchByConfigurationFiles = await inspectByConfigurationFileIfExists(framework, projectRootUrl, fileUrl);
+      const frameworkMatchByConfigurationFiles =
+        await inspectByConfigurationFileIfExists(
+          framework,
+          projectRootUrl,
+          fileUrl
+        );
       if (frameworkMatchByConfigurationFiles) {
-        foundFrameworks = insertOrUpdateMatchedFramwork(await getMatchedFrameworkObject(projectRootUrl, framework, fileUrl), foundFrameworks);
+        foundFrameworks = insertOrUpdateMatchedFramwork(
+          await getMatchedFrameworkObject(projectRootUrl, framework, fileUrl),
+          foundFrameworks
+        );
       }
 
-      const frameworkMatchByIndexHtml = await inspectByIndexHtml(framework, projectRootUrl, fileUrl);
+      const frameworkMatchByIndexHtml = await inspectByIndexHtml(
+        framework,
+        projectRootUrl,
+        fileUrl
+      );
       if (frameworkMatchByIndexHtml) {
-        foundFrameworks = insertOrUpdateMatchedFramwork(await getMatchedFrameworkObject(projectRootUrl, framework, fileUrl), foundFrameworks);
+        foundFrameworks = insertOrUpdateMatchedFramwork(
+          await getMatchedFrameworkObject(projectRootUrl, framework, fileUrl),
+          foundFrameworks
+        );
       }
 
-      if (frameworkMatchByPackageJson || frameworkMatchByConfigurationFiles || frameworkMatchByIndexHtml) {
+      if (
+        frameworkMatchByPackageJson ||
+        frameworkMatchByConfigurationFiles ||
+        frameworkMatchByIndexHtml
+      ) {
         if (framework.variant?.length) {
           toIgnoreIfMultipleFrameworksFound.push(framework.id);
 
           for (const variant of framework.variant) {
-            const variantFrameworkDefinition = framewokDefinitions.find((fwk) => fwk.id === variant);
+            const variantFrameworkDefinition = framewokDefinitions.find(
+              (fwk) => fwk.id === variant
+            );
 
             if (variantFrameworkDefinition) {
               // if we find a framework, let's check for its variants.
               // framework variants can share some dependencies or configuration files with the parent framework
               // we need to inspect the project for additional configuration files.
               // finding any addition configuration files means that this is a variant framework!
-              const foundVariantFramrworks = await inspect(projectRootUrl, [variantFrameworkDefinition], matchAll, projectFiles);
-              foundFrameworks = insertOrUpdateMatchedFramwork(await getMatchedFrameworkObject(projectRootUrl, framework, fileUrl), [
-                ...foundFrameworks,
-                ...foundVariantFramrworks,
-              ]);
+              const foundVariantFramrworks = await inspect(
+                projectRootUrl,
+                [variantFrameworkDefinition],
+                matchAll,
+                projectFiles
+              );
+              foundFrameworks = insertOrUpdateMatchedFramwork(
+                await getMatchedFrameworkObject(
+                  projectRootUrl,
+                  framework,
+                  fileUrl
+                ),
+                [...foundFrameworks, ...foundVariantFramrworks]
+              );
             }
           }
         }
@@ -159,7 +200,10 @@ export async function inspect(
       return foundFrameworks;
     } else {
       // if we detect multiple frameworks and the user wants the relevant ones only, we need to filter out the ones we want to ignore.
-      return foundFrameworks.filter((f) => toIgnoreIfMultipleFrameworksFound.includes(f.framework.id) === false);
+      return foundFrameworks.filter(
+        (f) =>
+          toIgnoreIfMultipleFrameworksFound.includes(f.framework.id) === false
+      );
     }
   }
 
@@ -184,7 +228,11 @@ function isPackageJsonFile(filepath: string) {
  * @param fileUrl The absolute URL of the package.json file to inspect.
  * @returns The matched framework definition, or NULL if no match is found.
  */
-async function inspectByPackageJSONIfExists(framework: FrameworkDefinition, root: string, fileUrl: string): Promise<FrameworkMatch | null> {
+async function inspectByPackageJSONIfExists(
+  framework: FrameworkDefinition,
+  root: string,
+  fileUrl: string
+): Promise<FrameworkMatch | null> {
   const isPackageJson = isPackageJsonFile(fileUrl);
   if (!isPackageJson) {
     return null;
@@ -200,7 +248,10 @@ async function inspectByPackageJSONIfExists(framework: FrameworkDefinition, root
   const packageJson = safeParseJson(jsonContentRaw || "{}");
   const extractedDependencies = packageJson.dependencies || {};
   const extractedDevDependencies = packageJson.devDependencies || {};
-  const extractedDependenciesKeys = [...Object.keys(extractedDependencies), ...Object.keys(extractedDevDependencies)];
+  const extractedDependenciesKeys = [
+    ...Object.keys(extractedDependencies),
+    ...Object.keys(extractedDevDependencies),
+  ];
   const extractedEntryKey = packageJson[framework.package?.entryKey!];
 
   if (extractedDependenciesKeys.length === 0) {
@@ -213,7 +264,9 @@ async function inspectByPackageJSONIfExists(framework: FrameworkDefinition, root
   } else if (extractedEntryKey) {
     return getMatchedFrameworkObject(root, framework, fileUrl);
   } else if (extractedDependenciesKeys.length) {
-    const matchedDependencies = framework.package?.dependencies.filter((value) => extractedDependenciesKeys.includes(value));
+    const matchedDependencies = framework.package?.dependencies.filter(
+      (value) => extractedDependenciesKeys.includes(value)
+    );
 
     if (matchedDependencies?.length) {
       return getMatchedFrameworkObject(root, framework, fileUrl);
@@ -232,7 +285,11 @@ async function inspectByPackageJSONIfExists(framework: FrameworkDefinition, root
  * @param fileUrl The absolute URL of the file to inspect.
  * @returns The matched framework definition, or NULL if no match is found.
  */
-async function inspectByConfigurationFileIfExists(framework: FrameworkDefinition, root: string, fileUrl: string): Promise<FrameworkMatch | null> {
+async function inspectByConfigurationFileIfExists(
+  framework: FrameworkDefinition,
+  root: string,
+  fileUrl: string
+): Promise<FrameworkMatch | null> {
   // some SSG/SSR frameworks are built on top of other frameworks (Angular, Vue, React, etc).
   // So in order to avoid false positives, we need to check if the framework has a specific config file before we move on.
   // if so, we need to check if the file exists,
@@ -266,10 +323,16 @@ async function inspectByConfigurationFileIfExists(framework: FrameworkDefinition
   }
 
   // if no dependencies are defined, we assume that the framework defintion does not require any dependencies for a match.
-  return hasConfigFile ? getMatchedFrameworkObject(root, framework, fileUrl) : null;
+  return hasConfigFile
+    ? getMatchedFrameworkObject(root, framework, fileUrl)
+    : null;
 }
 
-async function inspectByIndexHtml(framework: FrameworkDefinition, root: string, filename: string): Promise<FrameworkMatch | null> {
+async function inspectByIndexHtml(
+  framework: FrameworkDefinition,
+  root: string,
+  filename: string
+): Promise<FrameworkMatch | null> {
   const isStaticDefintion = framework.id === "static";
   if (!isStaticDefintion) {
     return null;
@@ -291,7 +354,10 @@ async function inspectByIndexHtml(framework: FrameworkDefinition, root: string, 
  * @param filename The file name to check.
  * @returns True if the current project has at least one configuration file that is provided in the framework definition.
  */
-function hasConfigurationFiles(framework: FrameworkDefinition, filename: string): boolean {
+function hasConfigurationFiles(
+  framework: FrameworkDefinition,
+  filename: string
+): boolean {
   if (!framework.configFiles) return false;
 
   let matchedFiles = 0;
@@ -341,8 +407,10 @@ function hasConfigurationFiles(framework: FrameworkDefinition, filename: string)
  * @param root The root directory of the project to inspect.
  * @returns The evaluated path extracted from the jmespath expression.
  */
-async function evaluateOutputLocation(framework: FrameworkDefinition, root: string): Promise<string> {
-
+async function evaluateOutputLocation(
+  framework: FrameworkDefinition,
+  root: string
+): Promise<string> {
   if (!framework.outputLocation) {
     return "./";
   }
@@ -353,7 +421,9 @@ async function evaluateOutputLocation(framework: FrameworkDefinition, root: stri
 
   const startOfExpression = framework.outputLocation.indexOf("{");
   const endOfExpression = framework.outputLocation.indexOf("}");
-  const expression = framework.outputLocation.substring(startOfExpression + 1, endOfExpression).trim();
+  const expression = framework.outputLocation
+    .substring(startOfExpression + 1, endOfExpression)
+    .trim();
   const [jsonFileToParse, jmespathExpression] = expression.split("#");
   const jsonFileToParsePath = path.join(root, jsonFileToParse.trim());
   const jsonContentRaw = await readFile(jsonFileToParsePath);
@@ -361,28 +431,45 @@ async function evaluateOutputLocation(framework: FrameworkDefinition, root: stri
   if (jsonContentRaw) {
     if (isValidJson(jsonContentRaw)) {
       const jsonContent = safeParseJson(jsonContentRaw);
-      const outputLocation = (await jmespathSearch(jsonContent, jmespathExpression.trim())) || "./";
+      const outputLocation =
+        (await jmespathSearch(jsonContent, jmespathExpression.trim())) || "./";
       return outputLocation;
     }
 
-    console.warn(`[${framework.name}] Could not parse JSON file: ${jsonFileToParsePath}`);
+    console.warn(
+      `[${framework.name}] Could not parse JSON file: ${jsonFileToParsePath}`
+    );
   }
   return "./";
 }
 
-function insertOrUpdateMatchedFramwork(matchedFramework: FrameworkMatch, matchedFrameworks: FrameworkMatch[]) {
+function insertOrUpdateMatchedFramwork(
+  matchedFramework: FrameworkMatch,
+  matchedFrameworks: FrameworkMatch[]
+) {
   // if matchedFramework in already in the list, merge the matchedFiles
 
-  const existingFramework = matchedFrameworks.find((value) => value.framework.id === matchedFramework.framework.id);
+  const existingFramework = matchedFrameworks.find(
+    (value) => value.framework.id === matchedFramework.framework.id
+  );
   if (existingFramework) {
-    existingFramework.matchedFiles = [...new Set([...existingFramework.matchedFiles, ...matchedFramework.matchedFiles])];
+    existingFramework.matchedFiles = [
+      ...new Set([
+        ...existingFramework.matchedFiles,
+        ...matchedFramework.matchedFiles,
+      ]),
+    ];
   } else {
     matchedFrameworks.push(matchedFramework);
   }
   return matchedFrameworks;
 }
 
-async function getMatchedFrameworkObject(projectRootUrl: string, framework: FrameworkDefinition, filepath: string): Promise<FrameworkMatch> {
+async function getMatchedFrameworkObject(
+  projectRootUrl: string,
+  framework: FrameworkDefinition,
+  filepath: string
+): Promise<FrameworkMatch> {
   const fileUrl = getUrlFromFilepath(filepath);
   const appLocation = getApplocationUrl(filepath);
   const { repo, owner } = getRepoInfoFromUrl(projectRootUrl);
@@ -399,49 +486,53 @@ async function getMatchedFrameworkObject(projectRootUrl: string, framework: Fram
   };
 }
 
-function isSWAService(frameworks: Record<string, FrameworkMatch>, projectUrl: string) {
+function isSWAService(
+  frameworks: Record<string, FrameworkMatch>,
+  projectUrl: string
+) {
   console.log(`Url: ${projectUrl}`);
   const totalFrameworks = Object.keys(frameworks).length;
-  
+
   // For SWA, the repo should have some static content
-  if(frameworks[FrameworkIds.static]) {
+  if (frameworks[FrameworkIds.static]) {
     // Static Code only
-    if(totalFrameworks === 1) {
+    if (totalFrameworks === 1) {
       return true;
     }
 
     // Static Code with Azure Functions
-    if(totalFrameworks === 2 && frameworks[FrameworkIds.azureFunctions]) {
+    if (totalFrameworks === 2 && frameworks[FrameworkIds.azureFunctions]) {
       return true;
     }
-    
+
     // Static Code with JavaScript
-    if(frameworks[FrameworkIds.nodejs]) {
-      const frameworksWithoutDependencies = Object.keys(frameworks).filter(key => !frameworks[key].framework.package?.dependencies);
+    if (frameworks[FrameworkIds.nodejs]) {
+      const frameworksWithoutDependencies = Object.keys(frameworks).filter(
+        (key) => !frameworks[key].framework.package?.dependencies
+      );
       // Static code with JS and Azure Functions
-      if(frameworks[FrameworkIds.azureFunctions]) {
-        
+      if (frameworks[FrameworkIds.azureFunctions]) {
         // Only host.json file
-        if(totalFrameworks === 3) {
+        if (totalFrameworks === 3) {
           return true;
         }
 
         // Azure functions has some code in a different language
-        if(totalFrameworks === 4 && frameworksWithoutDependencies.length > 4) {
+        if (totalFrameworks === 4 && frameworksWithoutDependencies.length > 4) {
           return false;
         } else {
           return true;
         }
-      
+
         // Static code + JS only
-      } else if(frameworksWithoutDependencies.length > 2) {
+      } else if (frameworksWithoutDependencies.length > 2) {
         return false;
       } else {
         return true;
       }
     }
   }
-  
+
   return false;
 }
 

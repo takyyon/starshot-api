@@ -7,8 +7,7 @@ const app: Express = express();
 const port = process.env.PORT || 8080;
 
 const corsOptions = {
-  origin: ['*'],
-  method: ['GET']
+  origin: ['*']
 };
 
 app.use(cors(corsOptions));
