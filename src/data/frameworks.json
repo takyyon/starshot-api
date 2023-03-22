@@ -153,6 +153,13 @@
       "package": { "dependencies": [] },
       "outputLocation": "",
       "configFiles": ["host.json"]
+    },
+    {
+      "id": "azure-azd",
+      "name": "Azd Template",
+      "package": { "dependencies": [] },
+      "outputLocation": "",
+      "configFiles": ["azure.yaml"]
     }
   ]
   
