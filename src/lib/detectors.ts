@@ -62,10 +62,10 @@ export function recommendService(
 
   if (isAzdTemplate(frameworkObj)) {
     return "azd-template";
-  } else if (isSWAService(frameworkObj, projectUrl)) {
-    return "staticwebapp";
   } else if (isContainerAppService(frameworkObj)) {
     return "containerapp";
+  } else if (isSWAService(frameworkObj, projectUrl)) {
+    return "staticwebapp";
   }
 
   return "webapp";
