@@ -34,7 +34,7 @@
       "id": "docker-file",
       "name": "Dockerfile",
       "outputLocation": "./",
-      "configFiles": ["Dockerfile", "docker-compose.yml", "docker-compose-dev.yml", "docker-compose.images.yml", "docker-stack.yml"]
+      "configFiles": ["Dockerfile"]
     },
     {
       "id": "angular",
