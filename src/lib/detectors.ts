@@ -60,9 +60,13 @@ export function recommendService(
     frameworkObj[match.framework.id] = match;
   }
 
-  if (isAzdTemplate(frameworkObj)) {
+  // @note: Azd is not supported atm
+  /**
+   * if (isAzdTemplate(frameworkObj)) {
     return "azd-template";
-  } else if (isContainerAppService(frameworkObj)) {
+  } else
+   */
+  if (isContainerAppService(frameworkObj)) {
     return "containerapp";
   } else if (isSWAService(frameworkObj, projectUrl)) {
     return "staticwebapp";
@@ -540,6 +544,6 @@ function isContainerAppService(frameworks: Record<string, FrameworkMatch>) {
   return !!frameworks[FrameworkIds.dockerFile];
 }
 
-function isAzdTemplate(frameworks: Record<string, FrameworkMatch>) {
-  return !!frameworks[FrameworkIds.azureAzd];
-}
+// function isAzdTemplate(frameworks: Record<string, FrameworkMatch>) {
+//   return !!frameworks[FrameworkIds.azureAzd];
+// }
