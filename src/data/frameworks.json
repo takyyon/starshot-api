@@ -3,38 +3,44 @@
       "id": "nodejs",
       "name": "Node.js",
       "outputLocation": "api",
-      "configFiles": ["package.json"]
+      "configFiles": ["package.json"],
+      "type": "backend"
     },
     {
       "id": "dotnet",
       "name": ".NET",
       "outputLocation": "api",
-      "configFiles": ["*.csproj", "*.fsproj", "global.json"]
+      "configFiles": ["*.csproj", "*.fsproj", "global.json"],
+      "type": "backend"
     },
     {
       "id": "python",
       "name": "Python",
       "outputLocation": "api",
       "variant": ["django"],
-      "configFiles": ["requirements.txt", "pyproject.toml", "runtime.txt", "setup.py"]
+      "configFiles": ["requirements.txt", "pyproject.toml", "runtime.txt", "setup.py"],
+      "type": "backend"
     },
     {
       "id": "django",
       "name": "Django",
       "outputLocation": "api",
-      "configFiles": ["manage.py", "wsgi.py", "app.py"]
+      "configFiles": ["manage.py", "wsgi.py", "app.py"],
+      "type": "backend"
     },
     {
       "id": "static",
       "name": "Static",
       "outputLocation": "./",
-      "configFiles": ["index.html", "Index.html", "default.htm", "default.html", "index.htm"]
+      "configFiles": ["index.html", "Index.html", "default.htm", "default.html", "index.htm"],
+      "type": "frontend"
     },
     {
       "id": "docker-file",
       "name": "Dockerfile",
       "outputLocation": "./",
-      "configFiles": ["Dockerfile"]
+      "configFiles": ["Dockerfile"],
+      "type": "backend"
     },
     {
       "id": "angular",
@@ -42,28 +48,32 @@
       "variant": ["angular-universal", "scully", "ionic-angular"],
       "package": { "dependencies": ["@angular/core"] },
       "outputLocation": "{angular.json#values(projects)[0].architect.build.options.outputPath}",
-      "configFiles": ["angular.json"]
+      "configFiles": ["angular.json"],
+      "type": "frontend"
     },
     {
       "id": "angular-universal",
       "name": "Angular Universal",
       "package": { "dependencies": ["@angular/platform-server"] },
       "outputLocation": "{angular.json#values(projects)[0].architect.build.options.outputPath}",
-      "configFiles": ["angular.json", "tsconfig.server.json"]
+      "configFiles": ["angular.json", "tsconfig.server.json"],
+      "type": "frontend"
     },
     {
       "id": "ionic-angular",
       "name": "Ionic for Angular",
       "package": { "dependencies": ["@ionic/angular"] },
       "outputLocation": "{angular.json#values(projects)[0].architect.build.options.outputPath}",
-      "configFiles": ["ionic.config.json", "angular.json"]
+      "configFiles": ["ionic.config.json", "angular.json"],
+      "type": "frontend"
     },
     {
       "id": "scully",
       "name": "Scully",
       "package": { "dependencies": ["@scullyio/scully", "@scullyio/init"] },
       "outputLocation": "{angular.json#values(projects)[0].architect.build.options.outputPath}",
-      "configFiles": ["angular.json", "scully.*.config.ts"]
+      "configFiles": ["angular.json", "scully.*.config.ts"],
+      "type": "frontend"
     },
   
     {
@@ -71,12 +81,13 @@
       "name": "React",
       "variant": ["preact", "nextjs", "gatsby", "ionic-react"],
       "package": { "dependencies": ["react", "react-dom"] },
-      "outputLocation": "build"
+      "outputLocation": "build",
+      "type": "frontend"
     },
-    { "id": "preact", "name": "Preact", "package": { "dependencies": ["preact"] }, "outputLocation": "build" },
-    { "id": "nextjs", "name": "Next.js", "package": { "dependencies": ["next"] }, "outputLocation": "out" },
-    { "id": "gatsby", "name": "Gatsby", "package": { "dependencies": ["gatsby"] }, "outputLocation": "public", "configFiles": ["gatsby-config.js"] },
-    { "id": "ionic-react", "name": "Ionic for React", "package": { "dependencies": ["@ionic/react"] }, "outputLocation": "build" },
+    { "id": "preact", "name": "Preact", "package": { "dependencies": ["preact"] }, "outputLocation": "build", "type": "frontend" },
+    { "id": "nextjs", "name": "Next.js", "package": { "dependencies": ["next"] }, "outputLocation": "out", "type": "frontend" },
+    { "id": "gatsby", "name": "Gatsby", "package": { "dependencies": ["gatsby"] }, "outputLocation": "public", "configFiles": ["gatsby-config.js"], "type": "frontend" },
+    { "id": "ionic-react", "name": "Ionic for React", "package": { "dependencies": ["@ionic/react"] }, "outputLocation": "build", "type": "frontend" },
   
     {
       "id": "vue",
@@ -84,82 +95,91 @@
       "variant": ["nuxtjs", "vuepress"],
       "package": { "dependencies": ["vue"] },
       "outputLocation": "dist",
-      "configFiles": ["vue.config.js"]
+      "configFiles": ["vue.config.js"],
+      "type": "frontend"
     },
-    { "id": "nuxtjs", "name": "Nuxt.js", "package": { "dependencies": ["nuxt"] }, "outputLocation": "dist", "configFiles": ["nuxt.config.js"] },
-    { "id": "vuepress", "name": "VuePress", "package": { "dependencies": ["vuepress"] }, "outputLocation": "dist" },
-  
-    { "id": "aurelia", "name": "Aurelia", "package": { "dependencies": ["aurelia-bootstrapper"] }, "outputLocation": "dist" },
-    { "id": "elm", "name": "Elm", "package": { "dependencies": ["elm", "elm-lang"] }, "outputLocation": "public", "configFiles": ["elm.json"] },
+    { "id": "nuxtjs", "name": "Nuxt.js", "package": { "dependencies": ["nuxt"] }, "outputLocation": "dist", "configFiles": ["nuxt.config.js"], "type": "frontend" },
+    { "id": "vuepress", "name": "VuePress", "package": { "dependencies": ["vuepress"] }, "outputLocation": "dist", "type": "frontend" },
+    { "id": "aurelia", "name": "Aurelia", "package": { "dependencies": ["aurelia-bootstrapper"] }, "outputLocation": "dist", "type": "frontend" },
+    { "id": "elm", "name": "Elm", "package": { "dependencies": ["elm", "elm-lang"] }, "outputLocation": "public", "configFiles": ["elm.json"], "type": "frontend" },
     {
       "id": "ember",
       "name": "Ember.js",
       "package": { "entryKey": "ember", "dependencies": ["ember-cli"] },
       "outputLocation": "dist",
-      "configFiles": ["ember-cli-build.js", ".ember-cli"]
+      "configFiles": ["ember-cli-build.js", ".ember-cli"],
+      "type": "frontend"
     },
     {
       "id": "flutter",
       "name": "Flutter",
       "package": { "dependencies": ["flutter", "flutter_test"] },
       "outputLocation": "build/web",
-      "configFiles": ["pubspec.yaml"]
+      "configFiles": ["pubspec.yaml"],
+      "type": "backend"
     },
-    { "id": "glimmer", "name": "Glimmer.js", "package": { "dependencies": ["@glimmer/core"] }, "outputLocation": "dist" },
+    { "id": "glimmer", "name": "Glimmer.js", "package": { "dependencies": ["@glimmer/core"] }, "outputLocation": "dist", "type": "frontend" },
     {
       "id": "hugo",
       "name": "Hugo",
       "package": { "dependencies": ["hugo-cli"] },
       "outputLocation": "public",
-      "configFiles": ["archetypes", "config.toml"]
+      "configFiles": ["archetypes", "config.toml"],
+      "type": "frontend"
     },
-    { "id": "knockoutjs", "name": "Knockout.js", "package": { "dependencies": ["knockout"] }, "outputLocation": "dist" },
+    { "id": "knockoutjs", "name": "Knockout.js", "package": { "dependencies": ["knockout"] }, "outputLocation": "dist", "type": "frontend" },
     {
       "id": "lit",
       "name": "Lit",
       "package": { "dependencies": ["lit-element"] },
       "outputLocation": "dist",
-      "configFiles": ["custom-elements.json"]
+      "configFiles": ["custom-elements.json"],
+      "type": "frontend"
     },
-    { "id": "marko", "name": "Marko.js", "package": { "dependencies": ["marko"] }, "outputLocation": "public" },
-    { "id": "meteor", "name": "Meteor", "package": { "entryKey": "meteor", "dependencies": ["meteor-node-stubs"] }, "outputLocation": "bundle" },
-    { "id": "mithril", "name": "Mithril.js", "package": { "dependencies": ["mithril"] }, "outputLocation": "dist" },
+    { "id": "marko", "name": "Marko.js", "package": { "dependencies": ["marko"] }, "outputLocation": "public", "type": "frontend" },
+    { "id": "meteor", "name": "Meteor", "package": { "entryKey": "meteor", "dependencies": ["meteor-node-stubs"] }, "outputLocation": "bundle", "type": "backend" },
+    { "id": "mithril", "name": "Mithril.js", "package": { "dependencies": ["mithril"] }, "outputLocation": "dist", "type": "frontend" },
     {
       "id": "polymer",
       "name": "Polymer",
       "package": { "dependencies": ["@polymer/polymer"] },
       "outputLocation": "build/default",
-      "configFiles": ["polymer.json"]
+      "configFiles": ["polymer.json"],
+      "type": "frontend"
     },
-    { "id": "riot", "name": "RiotJS", "package": { "dependencies": ["riot"] }, "outputLocation": "dist" },
+    { "id": "riot", "name": "RiotJS", "package": { "dependencies": ["riot"] }, "outputLocation": "dist", "type": "frontend" },
     {
       "id": "stencil",
       "name": "Stencil.js",
       "package": { "dependencies": ["@stencil/core"] },
       "outputLocation": "www",
-      "configFiles": ["stencil.config.ts"]
+      "configFiles": ["stencil.config.ts"],
+      "type": "frontend"
     },
-    { "id": "svelte", "name": "Svelte", "package": { "dependencies": ["svelte"] }, "outputLocation": "public" },
+    { "id": "svelte", "name": "Svelte", "package": { "dependencies": ["svelte"] }, "outputLocation": "public", "type": "frontend" },
     {
       "id": "typescript",
       "name": "TypeScript",
       "package": { "dependencies": ["typescript"] },
       "outputLocation": "{tsconfig.json#compilerOptions.outDir}",
-      "configFiles": ["tsconfig.json"]
+      "configFiles": ["tsconfig.json"],
+      "type": "backend"
     },
     {
       "id": "azure-functions",
       "name": "Azure Functions",
       "package": { "dependencies": [] },
       "outputLocation": "",
-      "configFiles": ["host.json"]
+      "configFiles": ["host.json"],
+      "type": "backend"
     },
     {
       "id": "azure-azd",
       "name": "Azd Template",
       "package": { "dependencies": [] },
       "outputLocation": "",
-      "configFiles": ["azure.yaml"]
+      "configFiles": ["azure.yaml"],
+      "type": "backend"
     }
   ]
   

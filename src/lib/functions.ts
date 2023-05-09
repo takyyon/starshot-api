@@ -9,8 +9,8 @@ export const getFrameworks = (org: string, repo: string, branch?: string): Promi
     return inspect(projectUrl, [], true, []);
 };
 
-export const getRecommendation = (frameworks: FrameworkMatch[], org: string, repo: string, branch?: string): Promise<RecommendationType> => {
+export const getRecommendation = (frameworks: FrameworkMatch[], org: string, repo: string, azd: boolean, branch?: string): Promise<RecommendationType> => {
     const projectUrl = getProjectUrl(org, repo, branch);
 
-    return Promise.resolve(recommendService(frameworks, projectUrl));
+    return Promise.resolve(recommendService(frameworks, projectUrl, azd));
 };

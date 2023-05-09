@@ -52,7 +52,8 @@ enum FrameworkIds {
 
 export function recommendService(
   frameworks: FrameworkMatch[],
-  projectUrl: string
+  projectUrl: string,
+  azd: boolean
 ): RecommendationType {
   const frameworkObj: Record<string, FrameworkMatch> = {};
 
@@ -60,13 +61,9 @@ export function recommendService(
     frameworkObj[match.framework.id] = match;
   }
 
-  // @note: Azd is not supported atm
-  /**
-   * if (isAzdTemplate(frameworkObj)) {
+  if (azd && isAzdTemplate(frameworkObj)) {
     return "azd-template";
-  } else
-   */
-  if (isContainerAppService(frameworkObj)) {
+  } else if (isContainerAppService(frameworkObj)) {
     return "containerapp";
   } else if (isSWAService(frameworkObj, projectUrl)) {
     return "staticwebapp";
@@ -544,6 +541,6 @@ function isContainerAppService(frameworks: Record<string, FrameworkMatch>) {
   return !!frameworks[FrameworkIds.dockerFile];
 }
 
-// function isAzdTemplate(frameworks: Record<string, FrameworkMatch>) {
-//   return !!frameworks[FrameworkIds.azureAzd];
-// }
+function isAzdTemplate(frameworks: Record<string, FrameworkMatch>) {
+  return !!frameworks[FrameworkIds.azureAzd];
+}

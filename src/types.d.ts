@@ -1,4 +1,3 @@
-
 declare interface FrameworkDefinition {
   id: string;
   name: string;
@@ -9,6 +8,7 @@ declare interface FrameworkDefinition {
     entryKey?: string;
   };
   variant?: string[];
+  type?: "backend" | "frontend";
 }
 
 declare interface FrameworkMatch {
@@ -20,7 +20,7 @@ declare interface FrameworkMatch {
     appLocation: string;
     apiLocaltion?: string;
     outputLocation: string;
-  }
+  };
 }
 
 declare interface GitHubTreeResponse {
@@ -31,7 +31,7 @@ declare interface GitHubTreeResponse {
   $$repo: {
     url: string;
     branch: string;
-  }
+  };
 }
 
 declare interface GitHubTreeEntry {
@@ -54,4 +54,9 @@ declare interface GitHubBlobResponse {
   encoding: "base64";
 }
 
-declare type RecommendationType = 'staticwebapp' | 'webapp' | 'functionapp' | 'containerapp' | 'azd-template';
+declare type RecommendationType =
+  | "staticwebapp"
+  | "webapp"
+  | "functionapp"
+  | "containerapp"
+  | "azd-template";
