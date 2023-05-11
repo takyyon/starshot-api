@@ -18,7 +18,7 @@
       "name": "Python",
       "outputLocation": "api",
       "variant": ["django"],
-      "configFiles": ["requirements.txt", "pyproject.toml", "runtime.txt", "setup.py"],
+      "configFiles": ["requirements.txt", "pyproject.toml", "runtime.txt", "setup.py", "manage.py", "wsgi.py", "app.py"],
       "type": "backend"
     },
     {
@@ -26,6 +26,20 @@
       "name": "Django",
       "outputLocation": "api",
       "configFiles": ["manage.py", "wsgi.py", "app.py"],
+      "type": "backend"
+    },
+    {
+      "id": "php",
+      "name": "php",
+      "outputLocation": "api",
+      "configFiles": ["index.php"],
+      "type": "backend"
+    },
+    {
+      "id": "java",
+      "name": "java",
+      "outputLocation": "api",
+      "configFiles": ["pom.xml", "build.gradle", "*.java"],
       "type": "backend"
     },
     {
